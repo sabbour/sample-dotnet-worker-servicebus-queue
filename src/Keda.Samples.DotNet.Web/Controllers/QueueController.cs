@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using Azure.Messaging.ServiceBus;
+using Azure.Messaging.ServiceBus.Administration;
 using Keda.Samples.Dotnet.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.ServiceBus;
@@ -18,19 +21,46 @@ namespace Keda.Samples.DotNet.Web.Controllers
             Configuration = configuration;
         }
 
+        private ServiceBusAdministrationClient AuthenticateToAzureServiceBus()
+        {
+            var authenticationMode = Configuration.GetValue<AuthenticationMode>("KEDA_SERVICEBUS_AUTH_MODE");
+            Console.WriteLine("Authentication mode: " + authenticationMode);
+
+            ServiceBusAdministrationClient serviceBusClient;
+
+            switch (authenticationMode)
+            {
+                case AuthenticationMode.ConnectionString:
+                    //Logger.LogInformation($"Authentication by using connection string");
+                    serviceBusClient = ServiceBusAdministrationClientFactory.CreateWithConnectionStringAuthentication(Configuration);
+                    break;
+                case AuthenticationMode.ServicePrinciple:
+                    //Logger.LogInformation("Authentication by using service principle");
+                    serviceBusClient = ServiceBusAdministrationClientFactory.CreateWithServicePrincipleAuthentication(Configuration);
+                    break;
+                case AuthenticationMode.WorkloadIdentity:
+                    //Logger.LogInformation("Authentication by using workload identity");
+                    serviceBusClient = ServiceBusAdministrationClientFactory.CreateWithWorkloadIdentityAuthentication(Configuration);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return serviceBusClient;
+        }
+
+
         [HttpGet]
         [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<QueueStatus> Get()
         {
-            var connectionString = Configuration.GetValue<string>("KEDA_SERVICEBUS_QUEUE_CONNECTIONSTRING");
-
-            // Check current queue length
-            var client = new ManagementClient(new ServiceBusConnectionStringBuilder(connectionString));
-            var queueInfo = await client.GetQueueRuntimeInfoAsync("orders");
+             // Check current queue length
+            var serviceBusClient = AuthenticateToAzureServiceBus();
+            var queueInfo = await serviceBusClient.GetQueueRuntimePropertiesAsync("orders");
 
             return new QueueStatus
             {
-                MessageCount = queueInfo.MessageCount
+                MessageCount = queueInfo.Value.TotalMessageCount
             };
         }
     }

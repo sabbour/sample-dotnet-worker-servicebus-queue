@@ -9,7 +9,7 @@
                 API endpoint to manage orders
             </summary>
         </member>
-        <member name="M:Keda.Samples.DotNet.Web.Controllers.OrdersController.#ctor(Microsoft.Azure.ServiceBus.QueueClient)">
+        <member name="M:Keda.Samples.DotNet.Web.Controllers.OrdersController.#ctor(Azure.Messaging.ServiceBus.ServiceBusSender)">
             <summary>
                 Constructor
             </summary>

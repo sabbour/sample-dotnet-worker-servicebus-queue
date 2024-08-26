@@ -20,7 +20,10 @@ namespace Keda.Samples.Dotnet.OrderProcessor
                 })
                 .ConfigureLogging((hostBuilderContext, loggingBuilder) =>
                 {
-                    loggingBuilder.AddConsole(consoleLoggerOptions => consoleLoggerOptions.TimestampFormat = "[HH:mm:ss]");
+                    loggingBuilder.AddConsole(consoleLoggerOptions =>
+                    {
+                        consoleLoggerOptions.TimestampFormat = "[HH:mm:ss]";
+                    });
                 })
                 .ConfigureServices(services =>
                 {
