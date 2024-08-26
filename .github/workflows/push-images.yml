@@ -2,6 +2,7 @@ name: Push Docker Images
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: # Add on demand trigger
 
 jobs:
   order_processor:
