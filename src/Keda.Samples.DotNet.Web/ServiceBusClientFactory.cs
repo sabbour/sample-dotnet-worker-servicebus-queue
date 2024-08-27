@@ -10,14 +10,8 @@ namespace Keda.Samples.DotNet.Web
         public static ServiceBusClient CreateWithWorkloadIdentityAuthentication(IConfiguration configuration)
         {
             var hostname = configuration.GetValue<string>("SERVICEBUS_HOST_NAME");
-            var appIdentityId = configuration.GetValue<string>("SERVICEBUS_IDENTITY_CLIENTID");
 
-            return new ServiceBusClient(hostname, new DefaultAzureCredential(
-                 new DefaultAzureCredentialOptions
-                 {
-                     WorkloadIdentityClientId = appIdentityId
-                 }
-             ));
+            return new ServiceBusClient(hostname, new DefaultAzureCredential());
         }
 
         public static ServiceBusClient CreateWithServicePrincipleAuthentication(IConfiguration configuration)
