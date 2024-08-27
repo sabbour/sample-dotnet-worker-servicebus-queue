@@ -7,24 +7,11 @@ namespace Keda.Samples.Dotnet.OrderProcessor
 {
     public static class ServiceBusClientFactory
     {
-        public static ServiceBusClient CreateWithPodIdentityAuthentication(IConfiguration configuration, ILogger logger)
-        {
-            var hostname = configuration.GetValue<string>("KEDA_SERVICEBUS_HOST_NAME");
-
-            var clientIdentityId = configuration.GetValue<string>("KEDA_SERVICEBUS_IDENTITY_USERASSIGNEDID", defaultValue: null);
-            if (string.IsNullOrWhiteSpace(clientIdentityId) == false)
-            {
-                logger.LogInformation("Using user-assigned identity with ID {UserAssignedIdentityId}", clientIdentityId);
-            }
-
-            return new ServiceBusClient(hostname, new ManagedIdentityCredential(clientId: clientIdentityId));
-        }
-
         public static ServiceBusClient CreateWithWorkloadIdentityAuthentication(IConfiguration configuration, ILogger logger)
         {
             var hostname = configuration.GetValue<string>("KEDA_SERVICEBUS_HOST_NAME");
 
-            return new ServiceBusClient(hostname, new ManagedIdentityCredential());
+            return new ServiceBusClient(hostname, new DefaultAzureCredential());
         }
 
         public static ServiceBusClient CreateWithServicePrincipleAuthentication(IConfiguration configuration)
