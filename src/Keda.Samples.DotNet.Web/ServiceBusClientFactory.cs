@@ -15,7 +15,7 @@ namespace Keda.Samples.DotNet.Web
             return new ServiceBusClient(hostname, new DefaultAzureCredential(
                  new DefaultAzureCredentialOptions
                  {
-                     ManagedIdentityClientId = appIdentityId
+                     WorkloadIdentityClientId = appIdentityId
                  }
              ));
         }
