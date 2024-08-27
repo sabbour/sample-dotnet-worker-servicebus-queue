@@ -77,7 +77,7 @@ namespace Keda.Samples.DotNet.Web
 
         private ServiceBusClient AuthenticateToAzureServiceBus()
         {
-            var authenticationMode = Configuration.GetValue<AuthenticationMode>("KEDA_SERVICEBUS_AUTH_MODE");
+            var authenticationMode = Configuration.GetValue<AuthenticationMode>("SERVICEBUS_AUTH_MODE");
 
             ServiceBusClient serviceBusClient;
 

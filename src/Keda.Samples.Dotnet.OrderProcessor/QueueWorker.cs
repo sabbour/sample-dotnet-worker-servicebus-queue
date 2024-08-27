@@ -24,7 +24,7 @@ namespace Keda.Samples.Dotnet.OrderProcessor
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var queueName = Configuration.GetValue<string>("KEDA_SERVICEBUS_QUEUE_NAME");
+            var queueName = Configuration.GetValue<string>("SERVICEBUS_QUEUE_NAME");
             var messageProcessor = CreateServiceBusProcessor(queueName);
             messageProcessor.ProcessMessageAsync += HandleMessageAsync;
             messageProcessor.ProcessErrorAsync += HandleReceivedExceptionAsync;
@@ -52,7 +52,7 @@ namespace Keda.Samples.Dotnet.OrderProcessor
 
         private ServiceBusClient AuthenticateToAzureServiceBus()
         {
-            var authenticationMode = Configuration.GetValue<AuthenticationMode>("KEDA_SERVICEBUS_AUTH_MODE");
+            var authenticationMode = Configuration.GetValue<AuthenticationMode>("SERVICEBUS_AUTH_MODE");
             
             ServiceBusClient serviceBusClient;
 
